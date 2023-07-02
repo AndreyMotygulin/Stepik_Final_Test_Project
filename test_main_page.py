@@ -1,11 +1,13 @@
-from selenium.webdriver.common.by import By
+from Stepik_Final_Test_Project.pages.main_page import MainPage
 import time
 
 
 def test_guest_can_go_to_login_page(browser):
     link = "http://selenium1py.pythonanywhere.com/"
-    browser.get(link)
-    login_link = browser.find_element(By.CSS_SELECTOR, "#login_link")
-    login_link.click()
+
+    page = MainPage(browser, link)
     
+    page.open()
+    page.go_to_login_page()
+    page.should_be_login_link()
     time.sleep(5)
