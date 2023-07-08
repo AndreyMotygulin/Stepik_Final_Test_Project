@@ -27,3 +27,11 @@ class ProductPage(BasePage):
         expected_product_price = self.get_product_price()
         actual_product_price = price_field_after_adding_to_basket.text
         assert actual_product_price == expected_product_price
+
+    def should_not_be_success_message(self):
+        assert self.is_not_element_present(*ProductPageLocators.PRODUCT_NAME_AFTER_ADDING), \
+            "Success message is presented, but should not be"
+
+    def should_be_disappeared_success_message(self):
+        assert self.is_disappeared(*ProductPageLocators.PRODUCT_NAME_AFTER_ADDING), \
+            "Success message is presented, but should be disappeared"
