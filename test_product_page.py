@@ -3,6 +3,7 @@ from Stepik_Final_Test_Project.pages.product_page import ProductPage
 from Stepik_Final_Test_Project.pages.basket_page import BasketPage
 
 import pytest
+import time
 
 
 @pytest.mark.parametrize('link',
@@ -95,3 +96,34 @@ def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
 
     basket_page.should_not_be_products_in_basket()
     basket_page.should_be_empty_basket_text()
+
+
+@pytest.mark.user_basket
+class TestUserAddToBasketFromProductPage:
+
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        self.link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
+        product_page = ProductPage(browser, self.link)
+        product_page.open()
+        product_page.go_to_login_page()
+
+        login_page = LoginPage(browser, browser.current_url)
+        email = str(time.time()) + "@fakemail.org"
+        password = str(time.time())
+        login_page.register_new_user(email, password)
+        login_page.should_be_authorized_user()
+
+    def test_user_cant_see_success_message(self, browser, setup):
+        page = ProductPage(browser, self.link)
+        page.open()
+        page.should_not_be_success_message()
+
+    def test_user_can_add_product_to_basket(self, browser, setup):
+        page = ProductPage(browser, self.link)
+        page.open()
+
+        page.add_to_basket()
+
+        page.check_product_name_after_adding_to_basket()
+        page.check_product_price_after_adding_to_basket()
